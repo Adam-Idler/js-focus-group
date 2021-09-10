@@ -1,9 +1,9 @@
-let title,
-    screens,
-    screenPrice,
-    rollback,
-    fullPrice,
-    adaptive;
+let title;
+let screens;
+let screenPrice;
+let rollback;
+let fullPrice;
+let adaptive;
 
 alert('Привет!');
 console.log('Привет из консоли!');
