@@ -1,26 +1,51 @@
-const title = prompt('Как называется Ваш проект?', 'Калькулятор стоимости сайта');
-const screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные');
-const screenPrice = +prompt('Сколько будет стоить данная работа?', '12000');
-const adaptive = confirm('Нужен ли адаптив на сайте?');
+let title
+let screens
+let screenPrice
+let adaptive
 
-let service1 = prompt('Какой дополнительный тип услуги нужен?', 'Добавление JavaScript');
-let servicePrice1 = +prompt('Сколько это будет стоить?', '5000');
-let service2 = prompt('Какой тип второй дополнительной услуги?', 'Добавление CMS');
-let servicePrice2 = +prompt('Сколько будет стоить вторая услуга?', '7000');
+let servicePrice1;
+let servicePrice2;
 
+let service1;
+let service2;
 let rollback = 10;
 let servicePercentPrice; 
 let fullPrice;
+let allServicePrices;
 
-
-
-
-const showTypeOf = function(variable) {
-    console.log(varable, typeof variable);
+const isNumber = (num) => {
+    return !isNaN(parseFloat(num)) && isFinite(num);
 };
 
-const getAllServicePrices = (addService1, addService2) => {
-    return +addService1 + addService2;
+const asking = () => {
+    title = prompt('Как называется Ваш проект?', 'Калькулятор стоимости сайта');
+    screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные');
+
+    do {
+        screenPrice = prompt('Сколько будет стоить данная работа?', '12000');
+    } while(!isNumber(screenPrice))
+
+    adaptive = confirm('Нужен ли адаптив на сайте?');
+};
+
+const showTypeOf = function(variable) {
+    console.log(variable, typeof variable);
+};
+
+const getAllServicePrices = () => {
+    let sum = 0;
+
+    for (let i = 0; i < 2; i++) {
+        if (i === 0) {
+            service1 = prompt('Какой дополнительный тип услуги нужен?', 'Добавление JavaScript');
+        } else if (i === 1 ) {
+            service2 = prompt('Какой тип второй дополнительной услуги?', 'Добавление CMS');
+        }
+
+        sum += +prompt('Сколько это будет стоить?', '5000');
+    }
+
+    return sum;
 };
 
 function getFullPrice(layoutPrice, addPrice) {
@@ -39,25 +64,27 @@ const getRollbackMessage = function(price) {
     if (price >= 30000) {
         return "Даем скидку 10%";
     } else if (price >= 15000 && price < 30000) {
-        return "";
-    } else if (price < 15000 && price >= 0) {
         return "Даем скидку 5%";
+    } else if (price < 15000 && price >= 0) {
+        return "Скидка не предусмотрена";
     } else {
         return "Что-то пошло не так...";
     }
 };
 
-const allServicePrices = getAllServicePrices(servicePrice1, servicePrice2);
 
+
+asking();
+allServicePrices = getAllServicePrices();
 fullPrice = getFullPrice(screenPrice, allServicePrices);
 servicePercentPrice = getServicePercentPrices(fullPrice, rollback);
+title = getTitle(title);
 
 
 
 
 console.log(getRollbackMessage(fullPrice));
 
-showTypeOf(type);
 showTypeOf(fullPrice);
 showTypeOf(adaptive);
 
