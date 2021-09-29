@@ -4,6 +4,24 @@ const isNumber = (num) => {
     return !isNaN(parseFloat(num)) && isFinite(num);
 }
 
+const getUserString = function(question, possibleAnswer = '') {
+    let answer;
+    do {
+      answer = prompt(question, possibleAnswer);
+    } while (answer.trim() === '' || isNumber(answer));
+
+    return answer;
+  };
+  
+const getUserNum = function(question, possibleAnswer = '') {
+    let answer;
+    do {
+      answer = prompt(question, possibleAnswer);
+    } while (!isNumber(answer));
+
+    return +answer;
+  };
+
 const appData = {
     title: '',
     screens: '',
@@ -21,11 +39,11 @@ const appData = {
     allServicePrices: 0,
 
     asking: () => {
-        appData.title = prompt('Как называется Ваш проект?', 'Калькулятор стоимости сайта');
-        appData.screens = prompt('Какие типы экранов нужно разработать?', 'Простые, Сложные');
+        appData.title = getUserString('Как называется Ваш проект?', 'Калькулятор стоимости сайта');
+        appData.screens = getUserString('Какие типы экранов нужно разработать?', 'Простые, Сложные');
     
         do {
-            appData.screenPrice = prompt('Сколько будет стоить данная работа?', '12000');
+            appData.screenPrice = getUserNum('Сколько будет стоить данная работа?', '12000');
         } while(!isNumber(appData.screenPrice))
     
         appData.adaptive = confirm('Нужен ли адаптив на сайте?');
@@ -38,13 +56,13 @@ const appData = {
             let price = 0;
     
             if (i === 0) {
-                appData.appDataservice1 = prompt('Какой дополнительный тип услуги нужен?', 'Добавление JavaScript');
+                appData.appDataservice1 = getUserString('Какой дополнительный тип услуги нужен?', 'Добавление JavaScript');
             } else if (i === 1 ) {
-                appData.appDataservice2 = prompt('Какой тип второй дополнительной услуги?', 'Добавление CMS');
+                appData.appDataservice2 = getUserString('Какой тип второй дополнительной услуги?', 'Добавление CMS');
             }
     
             do {
-                sum += +prompt('Сколько это будет стоить?', '5000');
+                sum += +getUserNum('Сколько это будет стоить?', '5000');
             } while (!isNumber(price))
     
             sum += +price;
