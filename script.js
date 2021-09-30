@@ -24,63 +24,78 @@ const getUserNum = function(question, possibleAnswer = '') {
 
 const appData = {
     title: '',
-    screens: '',
+    screens: [],
     screenPrice: 0,
     adaptive: true,
 
     servicePrice1: 0,
     servicePrice2: 0,
 
-    service1: '',
-    service2: '',
+    services: {
+
+    },
     rollback: 10,
     servicePercentPrice: 0,
     fullPrice: 0,
     allServicePrices: 0,
 
+    start: () => {
+        appData.asking();
+        appData.addPrices();
+        appData.getFullPrice();
+        appData.getServicePercentPrices();
+        appData.getTitle();
+        appData.logger();
+    },
+
     asking: () => {
         appData.title = getUserString('Как называется Ваш проект?', 'Калькулятор стоимости сайта');
-        appData.screens = getUserString('Какие типы экранов нужно разработать?', 'Простые, Сложные');
+
+        for (let i = 0; i < 2; i++) { 
+            let name = getUserString('Какие типы экранов нужно разработать?', 'Простые, Сложные');
+            let price = 0;
+
+            do {
+                price = getUserNum('Сколько будет стоить данная работа?', '12000');
+            } while(!isNumber(price))
+
+            appData.screens.push({id: i, name, price})
+        }
+
+        for (let i = 0; i < 2; i++) {
+            let name = appData.appDataservice1 = getUserString('Какой дополнительный тип услуги нужен?');
+            let price = 0;
     
-        do {
-            appData.screenPrice = getUserNum('Сколько будет стоить данная работа?', '12000');
-        } while(!isNumber(appData.screenPrice))
+            do {
+                price += getUserNum('Сколько это будет стоить?', '5000');
+            } while (!isNumber(price))
+
+            appData.services[name] = price;
+        }
     
         appData.adaptive = confirm('Нужен ли адаптив на сайте?');
     },
-    
-    getAllServicePrices: () => {
-        let sum = 0;
-    
-        for (let i = 0; i < 2; i++) {
-            let price = 0;
-    
-            if (i === 0) {
-                appData.appDataservice1 = getUserString('Какой дополнительный тип услуги нужен?', 'Добавление JavaScript');
-            } else if (i === 1 ) {
-                appData.appDataservice2 = getUserString('Какой тип второй дополнительной услуги?', 'Добавление CMS');
-            }
-    
-            do {
-                sum += +getUserNum('Сколько это будет стоить?', '5000');
-            } while (!isNumber(price))
-    
-            sum += +price;
+
+    addPrices: () => {
+        for (let screen of appData.screens) {
+            appData.screenPrice  += +screen.price;
         }
-    
-        return sum;
+
+        for (let key in appData.services) {
+            appData.allServicePrices += appData.services[key];
+        }
     },
     
     getFullPrice: function() {
-        return +appData.screenPrice + appData.allServicePrices;
+        appData.fullPrice = +appData.screenPrice + appData.allServicePrices;
     },
     
     getTitle: () => {
-        return appData.title.trim()[0].toUpperCase() + appData.title.trim().slice(1).toLowerCase();
+        appData.title = appData.title.trim()[0].toUpperCase() + appData.title.trim().slice(1).toLowerCase();
     },
     
     getServicePercentPrices: () => {
-        return appData.fullPrice - Math.ceil(appData.fullPrice / 100 * appData.rollback);
+        appData.servicePercentPrice = appData.fullPrice - Math.ceil(appData.fullPrice / 100 * appData.rollback);
     },
     
     getRollbackMessage: function(price) {
@@ -95,20 +110,14 @@ const appData = {
         }
     },
 
-    start: () => {
-        appData.asking();
-        appData.allServicePrices = appData.getAllServicePrices();
-        appData.fullPrice = appData.getFullPrice();
-        appData.servicePercentPrice = appData.getServicePercentPrices();
-        appData.title = appData.getTitle();
-        appData.logger();
-    },
-
     logger: () => {
-        console.log('Данные объекта appData:');
-        for (let key in appData) {
-            console.log(key, appData[key]);
-        }
+        // console.log('Данные объекта appData:');
+        // for (let key in appData) {
+        //     console.log(key, appData[key]);
+        // }
+        console.log(appData.fullPrice);
+        console.log(appData.servicePercentPrice);
+        console.log(appData.screens);
     },
 }
 
