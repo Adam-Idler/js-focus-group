@@ -134,4 +134,4 @@ const appData = {
     },
 }
 
-appData.start();
+// appData.start();
